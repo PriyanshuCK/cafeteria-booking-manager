@@ -26,12 +26,11 @@ export async function bookMeal(formData: FormData) {
       VALUES (${userId}, ${bookingDate}, ${isVegetarian})
       ON CONFLICT (user_id, booking_date) DO NOTHING;
     `;
-    revalidatePath("/dashboard");
-    redirect("/dashboard");
-    return { message: "Meal booked successfully" };
   } catch (error) {
     return { message: "Failed to book meal " + error };
   }
+  revalidatePath("/dashboard");
+  redirect("/dashboard");
 }
 
 const RecordPickupSchema = z.object({
@@ -51,12 +50,11 @@ export async function recordMealPickup(formData: FormData) {
       SET pickup_date = CURRENT_DATE
       WHERE user_id = ${userId} AND booking_date = ${bookingDate} AND pickup_date IS NULL;
     `;
-    revalidatePath("/dashboard");
-    redirect("/dashboard");
-    return { message: "Meal pickup recorded successfully" };
   } catch (error) {
     return { message: "Failed to record meal pickup " + error };
   }
+  revalidatePath("/dashboard");
+  redirect("/dashboard");
 }
 
 export async function getTodayBookingStatus(userId: string) {

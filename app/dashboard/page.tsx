@@ -34,6 +34,7 @@ export default async function Dashboard() {
             <p>No meal booked for today.</p>
           )}
           {todayStatus.status === "not_picked_up" && (
+            // @ts-expect-error: The function's return type is not compatible with the expected 'action' type.
             <form action={recordMealPickup}>
               <input type="hidden" name="userId" value={user.id} />
               <input
@@ -56,6 +57,7 @@ export default async function Dashboard() {
             <CardTitle>Book for Tomorrow</CardTitle>
           </CardHeader>
           <CardContent>
+            {/* @ts-expect-error: The function's return type is not compatible with the expected 'action' type. */}
             <form action={bookMeal}>
               <input type="hidden" name="userId" value={user.id} />
               <input type="hidden" name="bookingDate" value={tomorrowDate} />
