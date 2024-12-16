@@ -7,14 +7,15 @@ import {
 } from "../lib/actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { auth, signOut } from "@/auth";
 
 export default async function Dashboard() {
-  const user = await getUser("user@nextmail.com");
+  const authUser = await auth();
+  const user = await getUser(authUser?.user?.email || "user@nextmail.com");
 
   if (!user) {
     return <div>User not found</div>;
   }
-
   const weeklyMenu = await getWeeklyMenu();
   const todayStatus = await getTodayBookingStatus(user.id);
   const tomorrowBooked = await checkTomorrowBooking(user.id);
@@ -108,6 +109,16 @@ export default async function Dashboard() {
           ))}
         </CardContent>
       </Card>
+      <form
+        action={async () => {
+          "use server";
+          await signOut();
+        }}
+      >
+        <button className="flex h-[48px] grow items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium hover:bg-sky-100 hover:text-blue-600 md:flex-none md:justify-start md:p-2 md:px-3">
+          <div className="hidden md:block">Sign Out</div>
+        </button>
+      </form>
     </div>
   );
 }
