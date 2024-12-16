@@ -1,4 +1,3 @@
-// Users
 export const users = [
   {
     id: "410544b2-4001-4271-9855-fec4b6a6442a",
@@ -18,7 +17,6 @@ export const users = [
   },
 ];
 
-// Weekly Menu
 export const weeklyMenu: {
   id: string;
   day_of_week: number;
@@ -61,43 +59,21 @@ export const weeklyMenu: {
     non_veg_items: "",
     is_non_veg_available: false,
   },
-  {
-    id: "76d65c26-f784-44a2-ac19-586678f7c2f2",
-    day_of_week: 5,
-    veg_items: "Roti;Dal;Rice;Mixed Vegetable Curry;Rasmalai",
-    non_veg_items: "Mutton Curry",
-    is_non_veg_available: true,
-  },
-  {
-    id: "CC27C14A-0ACF-4F4A-A6C9-D45682C144B9",
-    day_of_week: 6,
-    veg_items: "Roti;Dal;Rice;Malai Kofta;Ice Cream",
-    non_veg_items: "",
-    is_non_veg_available: false,
-  },
 ];
 
-// Meal Bookings
 export const mealBookings = [
   {
     id: "b9c56c45-5395-4a57-9f5d-e6ec0edf0563",
     user_id: "410544b2-4001-4271-9855-fec4b6a6442a",
     booking_date: "2023-05-01",
     is_vegetarian: true,
+    pickup_date: null,
   },
   {
     id: "c0c56c45-5395-4a57-9f5d-e6ec0edf0564",
     user_id: "3958dc9e-712f-4377-85e9-fec4b6a6442a",
     booking_date: "2023-05-01",
     is_vegetarian: false,
-  },
-];
-
-// Meal Pickups
-export const mealPickups = [
-  {
-    id: "d1c56c45-5395-4a57-9f5d-e6ec0edf0565",
-    booking_id: "b9c56c45-5395-4a57-9f5d-e6ec0edf0563",
-    pickup_time: "2023-05-01T12:30:00Z",
+    pickup_date: null,
   },
 ];

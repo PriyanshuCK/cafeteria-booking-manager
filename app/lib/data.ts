@@ -1,10 +1,17 @@
 import { sql } from "@vercel/postgres";
-import { User, WeeklyMenu, MealBooking, MealPickup } from "./definitions";
+import {
+  User,
+  WeeklyMenu,
+  MealBooking,
+  UserSchema,
+  WeeklyMenuSchema,
+  MealBookingSchema,
+} from "./definitions";
 
 export async function getUser(email: string): Promise<User | undefined> {
   try {
     const user = await sql<User>`SELECT * FROM users WHERE email = ${email}`;
-    return user.rows[0];
+    return user.rows[0] ? UserSchema.parse(user.rows[0]) : undefined;
   } catch (error) {
     console.error("Failed to fetch user:", error);
     throw new Error("Failed to fetch user.");
@@ -15,40 +22,33 @@ export async function getWeeklyMenu(): Promise<WeeklyMenu[]> {
   try {
     const menu =
       await sql<WeeklyMenu>`SELECT * FROM weekly_menu ORDER BY day_of_week`;
-    return menu.rows;
+    return menu.rows.map((row) => WeeklyMenuSchema.parse(row));
   } catch (error) {
     console.error("Failed to fetch weekly menu:", error);
     throw new Error("Failed to fetch weekly menu.");
   }
 }
 
-export async function getMealBookingsForDate(
+export async function getMealBookingForDate(
+  userId: string,
   date: string
-): Promise<MealBooking[]> {
+): Promise<MealBooking | undefined> {
   try {
-    const bookings = await sql<MealBooking>`
+    const booking = await sql<MealBooking>`
       SELECT * FROM meal_bookings 
-      WHERE booking_date = ${date}
+      WHERE user_id = ${userId} AND booking_date = ${date}
     `;
-    return bookings.rows;
+    return booking.rows[0]
+      ? MealBookingSchema.parse(booking.rows[0])
+      : undefined;
   } catch (error) {
-    console.error("Failed to fetch meal bookings:", error);
-    throw new Error("Failed to fetch meal bookings.");
+    console.error("Failed to fetch meal booking:", error);
+    throw new Error("Failed to fetch meal booking.");
   }
 }
 
-export async function getMealPickupsForDate(
-  date: string
-): Promise<MealPickup[]> {
-  try {
-    const pickups = await sql<MealPickup>`
-      SELECT mp.* FROM meal_pickups mp
-      JOIN meal_bookings mb ON mp.booking_id = mb.id
-      WHERE mb.booking_date = ${date}
-    `;
-    return pickups.rows;
-  } catch (error) {
-    console.error("Failed to fetch meal pickups:", error);
-    throw new Error("Failed to fetch meal pickups.");
-  }
+export async function getTomorrowsDate(): Promise<string> {
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  return tomorrow.toISOString().split("T")[0];
 }
