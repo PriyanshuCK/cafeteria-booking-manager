@@ -18,6 +18,16 @@ export async function getUser(email: string): Promise<User | undefined> {
   }
 }
 
+export async function getUserByID(id: string): Promise<User | undefined> {
+  try {
+    const user = await sql<User>`SELECT * FROM users WHERE user_id = ${id}`;
+    return user.rows[0] ? UserSchema.parse(user.rows[0]) : undefined;
+  } catch (error) {
+    console.error("Failed to fetch user:", error);
+    throw new Error("Failed to fetch user.");
+  }
+}
+
 export async function getWeeklyMenu(): Promise<WeeklyMenu[]> {
   try {
     const menu =
@@ -51,4 +61,34 @@ export async function getTomorrowsDate(): Promise<string> {
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   return tomorrow.toISOString().split("T")[0];
+}
+
+export async function getUsers(): Promise<User[]> {
+  try {
+    const users = await sql<User>`SELECT * FROM users ORDER BY name`;
+    return users.rows.map((user) => UserSchema.parse(user));
+  } catch (error) {
+    console.error("Failed to fetch users:", error);
+    throw new Error("Failed to fetch users.");
+  }
+}
+
+export async function getBookings(): Promise<MealBooking[]> {
+  try {
+    const bookings =
+      await sql<MealBooking>`SELECT * FROM meal_bookings ORDER BY booking_date DESC`;
+
+    return bookings.rows.map((booking) => {
+      return MealBookingSchema.parse({
+        ...booking,
+        booking_date: booking.booking_date.toString(),
+        pickup_date: booking.pickup_date
+          ? booking.pickup_date.toString()
+          : null,
+      });
+    });
+  } catch (error) {
+    console.error("Failed to fetch bookings:", error);
+    throw new Error("Failed to fetch bookings.");
+  }
 }

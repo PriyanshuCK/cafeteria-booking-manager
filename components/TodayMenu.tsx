@@ -2,6 +2,7 @@ import { getWeeklyMenu } from "@/app/lib/data";
 
 export default async function TodayMenu() {
   const today = new Date().getDay() - 1;
+  // Todo: Performance optimization -> get only today's menu instead of complete menu
   const weeklyMenu = await getWeeklyMenu();
   const menuDay = today > 4 ? 4 : today;
 
