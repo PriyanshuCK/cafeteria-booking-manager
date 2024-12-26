@@ -33,7 +33,7 @@ export function MenuManagement({
       if (result.success) {
         setWeeklyMenu(weeklyMenu.map((i) => (i.id === item.id ? item : i)));
         setEditedItems((prev) => {
-          const { [id]: _, ...remaining } = prev;
+          const { [id]: _, ...remaining } = prev; // eslint-disable-line @typescript-eslint/no-unused-vars
           return remaining;
         });
       } else {
