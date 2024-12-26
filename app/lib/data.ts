@@ -7,6 +7,7 @@ import {
   WeeklyMenuSchema,
   MealBookingSchema,
 } from "./definitions";
+import { z } from "zod";
 
 export async function getUser(email: string): Promise<User | undefined> {
   try {
@@ -73,22 +74,64 @@ export async function getUsers(): Promise<User[]> {
   }
 }
 
-export async function getBookings(): Promise<MealBooking[]> {
-  try {
-    const bookings =
-      await sql<MealBooking>`SELECT * FROM meal_bookings ORDER BY booking_date DESC`;
+// export async function getBookings(): Promise<MealBooking[]> {
+//   try {
+//     const bookings =
+//       await sql<MealBooking>`SELECT * FROM meal_bookings ORDER BY booking_date DESC`;
 
-    return bookings.rows.map((booking) => {
-      return MealBookingSchema.parse({
+//     return bookings.rows.map((booking) => {
+//       return MealBookingSchema.parse({
+//         ...booking,
+//         booking_date: booking.booking_date.toString(),
+//         pickup_date: booking.pickup_date
+//           ? booking.pickup_date.toString()
+//           : null,
+//       });
+//     });
+//   } catch (error) {
+//     console.error("Failed to fetch bookings:", error);
+//     throw new Error("Failed to fetch bookings.");
+//   }
+// }
+
+export async function getBookings(
+  fromDate: Date,
+  toDate: Date
+): Promise<MealBooking[]> {
+  try {
+    const bookings = await sql<MealBooking>`
+      SELECT * FROM meal_bookings 
+      WHERE booking_date BETWEEN ${fromDate.toISOString()} AND ${toDate.toISOString()}
+      ORDER BY booking_date DESC
+    `;
+    return bookings.rows.map((booking) =>
+      MealBookingSchema.parse({
         ...booking,
         booking_date: booking.booking_date.toString(),
         pickup_date: booking.pickup_date
           ? booking.pickup_date.toString()
           : null,
-      });
-    });
+      })
+    );
   } catch (error) {
     console.error("Failed to fetch bookings:", error);
     throw new Error("Failed to fetch bookings.");
+  }
+}
+
+const DisabledDateSchema = z.object({
+  date: z.string(),
+});
+
+export async function getDisabledDates(): Promise<string[]> {
+  try {
+    const result = await sql`SELECT date FROM disabled_dates ORDER BY date`;
+    const disabledDates = result.rows.map(
+      (row) => DisabledDateSchema.parse(row).date
+    );
+    return disabledDates;
+  } catch (error) {
+    console.error("Failed to fetch disabled dates:", error);
+    throw new Error("Failed to fetch disabled dates.");
   }
 }

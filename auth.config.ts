@@ -10,6 +10,7 @@ export const authConfig = {
       const isLoggedIn = !!auth?.user;
       const isOnDashboard = nextUrl.pathname.startsWith("/dashboard");
       const isOnAdminDashboard = nextUrl.pathname.startsWith("/admin");
+      const isOnRoot = nextUrl.pathname === "/";
 
       if (isOnDashboard) {
         if (isLoggedIn) return true;
@@ -23,10 +24,16 @@ export const authConfig = {
           return Response.redirect(new URL("/dashboard", nextUrl));
         }
         return false;
-      } else if (isLoggedIn) {
-        return Response.redirect(new URL("/dashboard", nextUrl));
+      } else if (isLoggedIn && isOnRoot) {
+        if (auth?.user?.email) {
+          const user = await getUser(auth?.user?.email);
+          if (user?.is_admin) {
+            return Response.redirect(new URL("/admin", nextUrl));
+          }
+        } else {
+          return Response.redirect(new URL("/dashboard", nextUrl));
+        }
       }
-      return true;
     },
   },
   providers: [],
