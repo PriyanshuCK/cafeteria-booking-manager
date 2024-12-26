@@ -12,7 +12,7 @@ import { BulkUserImport } from "./BulkUserImport";
 import { AddUser } from "./AddUser";
 import { UserTable } from "./UserTable";
 import { BookingManagement } from "./BookingManagement";
-// import { MenuManagement } from "./MenuManagement";
+import { MenuManagement } from "./MenuManagement";
 import { BookingOverview } from "./BookingOverview";
 import { PickupTrends } from "./PickupTrends";
 // import { DisableDates } from "./DisableDates";
@@ -24,7 +24,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { MealBooking, User } from "../lib/definitions";
+import { MealBooking, User, WeeklyMenu } from "../lib/definitions";
 import { DateRange } from "react-day-picker";
 import { addDays } from "date-fns";
 
@@ -35,20 +35,20 @@ export default function AdminDashboard() {
   });
   const [bookings, setBookings] = useState<MealBooking[]>([]);
   const [users, setUsers] = useState<User[]>([]);
-  // const [weeklyMenu, setWeeklyMenu] = useState<WeeklyMenu[]>([]);
+  const [weeklyMenu, setWeeklyMenu] = useState<WeeklyMenu[]>([]);
   // const [disabledDates, setDisabledDates] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [fetchedUsers] = await Promise.all([
+        const [fetchedUsers, fetchedWeeklyMenu] = await Promise.all([
           fetchUsers(),
           fetchWeeklyMenu(),
           fetchDisabledDates(),
         ]);
         setUsers(fetchedUsers);
-        // setWeeklyMenu(fetchedWeeklyMenu);
+        setWeeklyMenu(fetchedWeeklyMenu);
         // setDisabledDates(fetchedDisabledDates);
       } catch (error) {
         console.error("Failed to fetch data:", error);
@@ -141,7 +141,7 @@ export default function AdminDashboard() {
               <CardDescription>Manage weekly menu items</CardDescription>
             </CardHeader>
             <CardContent>
-              {/* <MenuManagement weeklyMenu={weeklyMenu} /> */}
+              <MenuManagement weeklyMenu={weeklyMenu} />
             </CardContent>
           </Card>
         </TabsContent>

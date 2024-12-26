@@ -39,7 +39,10 @@ export function BookingManagement({
   const filteredBookings = bookings.filter(
     (booking) =>
       booking.user_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      booking.booking_date.includes(searchTerm)
+      new Date(booking.booking_date)
+        .toDateString()
+        .toLowerCase()
+        .includes(searchTerm)
   );
 
   const handleSelectBooking = (bookingId: string) => {

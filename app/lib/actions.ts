@@ -246,11 +246,20 @@ export async function editUser(userData: z.infer<typeof UserSchema>) {
   }
 }
 
-export async function addMenuItem(menuItem: z.infer<typeof WeeklyMenuSchema>) {
+const AddMenuSchema = z.object({
+  day_of_week: z.number().min(0).max(4),
+  veg_items: z.string(),
+  non_veg_items: z.string(),
+  is_non_veg_available: z.boolean(),
+});
+
+export async function addMenuItem(menuItem: z.infer<typeof AddMenuSchema>) {
+  const { day_of_week, veg_items, non_veg_items, is_non_veg_available } =
+    AddMenuSchema.parse(menuItem);
   try {
     const result = await sql`
       INSERT INTO weekly_menu (day_of_week, veg_items, non_veg_items, is_non_veg_available)
-      VALUES (${menuItem.day_of_week}, ${menuItem.veg_items}, ${menuItem.non_veg_items}, ${menuItem.is_non_veg_available})
+      VALUES (${day_of_week}, ${veg_items}, ${non_veg_items}, ${is_non_veg_available})
       RETURNING *
     `;
     revalidatePath("/admin");
