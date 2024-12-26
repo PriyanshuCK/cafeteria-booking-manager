@@ -1,17 +1,20 @@
 "use client";
 
+import { DateRangeContext } from "@/app/admin/contexts/DateRangeContext";
 import { DatePickerWithRange } from "@/components/ui/date-range-picker";
-import { DateRange } from "react-day-picker";
+import { useContext } from "react";
 
-interface DateRangeSelectorProps {
-  dateRange: DateRange | undefined;
-  setDateRange: (dateRange: DateRange | undefined) => void;
-}
+export function DateRangeSelector() {
+  const context = useContext(DateRangeContext);
 
-export function DateRangeSelector({
-  dateRange,
-  setDateRange,
-}: DateRangeSelectorProps) {
+  if (!context) {
+    throw new Error(
+      "DateRangeSelector must be used within a DateRangeProvider"
+    );
+  }
+
+  const { dateRange, setDateRange } = context;
+
   return (
     <DatePickerWithRange
       className="max-w-sm"

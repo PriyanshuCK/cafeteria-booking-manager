@@ -1,5 +1,8 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AdminSidebar } from "./AdminSidebar";
+import { DateRangeProvider } from "./contexts/DateRangeContext";
+import { DateRangeSelector } from "@/components/date-range-selector";
+import { BookingProvider } from "./contexts/BookingsContext";
 
 export default function AdminLayout({
   children,
@@ -10,9 +13,14 @@ export default function AdminLayout({
     <>
       <SidebarProvider>
         <AdminSidebar />
-        <main>
+        <main className="w-full">
           <SidebarTrigger />
-          {children}
+          <DateRangeProvider>
+            <BookingProvider>
+              <DateRangeSelector />
+              {children}
+            </BookingProvider>
+          </DateRangeProvider>
         </main>
       </SidebarProvider>
     </>

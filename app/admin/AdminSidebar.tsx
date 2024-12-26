@@ -35,6 +35,7 @@ const items = [
     title: "Overview",
     url: "",
     icon: LayoutDashboard,
+    disabled: false,
   },
   {
     title: "Reports",
@@ -44,16 +45,19 @@ const items = [
       { title: "Booking Overview", url: "/reports/booking-overview" },
       { title: "Pickup Trends", url: "/reports/pickup-trends" },
     ],
+    disabled: false,
   },
   {
     title: "Menu",
     url: "/menu",
     icon: UtensilsCrossed,
+    disabled: false,
   },
   {
     title: "Holidays",
     url: "/holidays",
     icon: Calendar,
+    disabled: true,
   },
   {
     title: "Users",
@@ -64,6 +68,7 @@ const items = [
       { title: "Add User", url: "/users/add" },
       { title: "Bulk Import", url: "/users/bulk-import" },
     ],
+    disabled: false,
   },
   {
     title: "Bookings",
@@ -73,31 +78,37 @@ const items = [
       { title: "All Bookings", url: "/bookings/all" },
       { title: "Create Booking", url: "/bookings/create" },
     ],
+    disabled: false,
   },
   {
     title: "Leftover",
     url: "/leftover",
     icon: Trash,
+    disabled: true,
   },
   {
     title: "Queries",
     url: "/queries",
     icon: HelpCircle,
+    disabled: true,
   },
   {
     title: "Feedback",
     url: "/feedback",
     icon: MessageSquare,
+    disabled: true,
   },
   {
     title: "Polls",
     url: "/polls",
     icon: Vote,
+    disabled: true,
   },
   {
     title: "Guests",
     url: "/guests",
     icon: User,
+    disabled: true,
   },
 ];
 
@@ -109,50 +120,61 @@ export function AdminSidebar() {
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
-                <Collapsible
-                  key={item.title}
-                  defaultOpen={false}
-                  className="group/collapsible"
-                >
-                  <SidebarMenuItem>
-                    {item.submenu ? (
-                      <>
-                        <CollapsibleTrigger asChild>
-                          <SidebarMenuButton>
+              {items.map((item) => {
+                // console.log(item);
+
+                return (
+                  <Collapsible
+                    key={item.title}
+                    defaultOpen={false}
+                    className="group/collapsible"
+                  >
+                    <SidebarMenuItem>
+                      {item.submenu ? (
+                        <>
+                          <CollapsibleTrigger asChild>
+                            <SidebarMenuButton>
+                              <item.icon />
+                              <span className="flex-1">{item.title}</span>
+                              <ChevronRight
+                                className="transition-transform group-data-[state=open]/collapsible:rotate-90"
+                                size={16}
+                              />
+                            </SidebarMenuButton>
+                          </CollapsibleTrigger>
+                          <CollapsibleContent>
+                            <SidebarMenuSub>
+                              {item.submenu.map((subitem) => (
+                                <SidebarMenuSubItem key={subitem.title}>
+                                  <SidebarMenuButton asChild>
+                                    <a href={`/admin${subitem.url}`}>
+                                      <span>{subitem.title}</span>
+                                    </a>
+                                  </SidebarMenuButton>
+                                </SidebarMenuSubItem>
+                              ))}
+                            </SidebarMenuSub>
+                          </CollapsibleContent>
+                        </>
+                      ) : (
+                        <SidebarMenuButton asChild>
+                          <a
+                            href={`/admin${item.url}`}
+                            className={
+                              item.disabled
+                                ? "pointer-events-none cursor-not-allowed opacity-50"
+                                : ""
+                            }
+                          >
                             <item.icon />
-                            <span className="flex-1">{item.title}</span>
-                            <ChevronRight
-                              className="transition-transform group-data-[state=open]/collapsible:rotate-90"
-                              size={16}
-                            />
-                          </SidebarMenuButton>
-                        </CollapsibleTrigger>
-                        <CollapsibleContent>
-                          <SidebarMenuSub>
-                            {item.submenu.map((subitem) => (
-                              <SidebarMenuSubItem key={subitem.title}>
-                                <SidebarMenuButton asChild>
-                                  <a href={`/admin${subitem.url}`}>
-                                    <span>{subitem.title}</span>
-                                  </a>
-                                </SidebarMenuButton>
-                              </SidebarMenuSubItem>
-                            ))}
-                          </SidebarMenuSub>
-                        </CollapsibleContent>
-                      </>
-                    ) : (
-                      <SidebarMenuButton asChild>
-                        <a href={`/admin${item.url}`}>
-                          <item.icon />
-                          <span>{item.title}</span>
-                        </a>
-                      </SidebarMenuButton>
-                    )}
-                  </SidebarMenuItem>
-                </Collapsible>
-              ))}
+                            <span>{item.title}</span>
+                          </a>
+                        </SidebarMenuButton>
+                      )}
+                    </SidebarMenuItem>
+                  </Collapsible>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

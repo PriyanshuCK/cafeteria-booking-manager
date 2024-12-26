@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   fetchUsers,
   fetchWeeklyMenu,
@@ -25,14 +25,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { MealBooking, User, WeeklyMenu } from "../lib/definitions";
-import { DateRange } from "react-day-picker";
-import { addDays } from "date-fns";
+import { DateRangeContext } from "./contexts/DateRangeContext";
 
 export default function AdminDashboard() {
-  const [dateRange, setDateRange] = useState<DateRange | undefined>({
-    from: new Date(),
-    to: addDays(new Date(), 7),
-  });
+  const { dateRange } = useContext(DateRangeContext)!;
   const [bookings, setBookings] = useState<MealBooking[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [weeklyMenu, setWeeklyMenu] = useState<WeeklyMenu[]>([]);
@@ -89,7 +85,7 @@ export default function AdminDashboard() {
       <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
 
       <div className="mb-4">
-        <DateRangeSelector dateRange={dateRange} setDateRange={setDateRange} />
+        <DateRangeSelector />
       </div>
 
       <Tabs defaultValue="users" className="w-full">
