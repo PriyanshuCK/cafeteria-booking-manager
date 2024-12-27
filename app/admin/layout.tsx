@@ -3,6 +3,7 @@ import { AdminSidebar } from "./AdminSidebar";
 import { DateRangeProvider } from "./contexts/DateRangeContext";
 import { DateRangeSelector } from "@/components/date-range-selector";
 import { BookingProvider } from "./contexts/BookingsContext";
+import DynamicBreadCrumb from "@/components/dynamic-breadcrumb";
 
 export default function AdminLayout({
   children,
@@ -14,7 +15,11 @@ export default function AdminLayout({
       <SidebarProvider>
         <AdminSidebar />
         <main className="w-full">
-          <SidebarTrigger />
+          <div className="flex items-start gap-1">
+            <SidebarTrigger />
+            <span>|</span>
+            <DynamicBreadCrumb />
+          </div>
           <DateRangeProvider>
             <BookingProvider>
               <DateRangeSelector />

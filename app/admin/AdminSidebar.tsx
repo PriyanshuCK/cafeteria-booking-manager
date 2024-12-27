@@ -117,12 +117,10 @@ export function AdminSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel>Admin Dashboard</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => {
-                // console.log(item);
-
                 return (
                   <Collapsible
                     key={item.title}
