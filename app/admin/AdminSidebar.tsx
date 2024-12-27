@@ -51,7 +51,7 @@ const items = [
     title: "Menu",
     url: "/menu",
     icon: UtensilsCrossed,
-    disabled: false,
+    disabled: true,
   },
   {
     title: "Holidays",
@@ -78,7 +78,7 @@ const items = [
       { title: "All Bookings", url: "/bookings/all" },
       { title: "Create Booking", url: "/bookings/create" },
     ],
-    disabled: false,
+    disabled: true,
   },
   {
     title: "Leftover",
@@ -145,7 +145,14 @@ export function AdminSidebar() {
                               {item.submenu.map((subitem) => (
                                 <SidebarMenuSubItem key={subitem.title}>
                                   <SidebarMenuButton asChild>
-                                    <a href={`/admin${subitem.url}`}>
+                                    <a
+                                      href={`/admin${subitem.url}`}
+                                      className={
+                                        item.disabled
+                                          ? "pointer-events-none cursor-not-allowed opacity-50"
+                                          : ""
+                                      }
+                                    >
                                       <span>{subitem.title}</span>
                                     </a>
                                   </SidebarMenuButton>
