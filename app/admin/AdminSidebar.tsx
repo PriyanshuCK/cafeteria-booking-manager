@@ -51,7 +51,7 @@ const items = [
     title: "Menu",
     url: "/menu",
     icon: UtensilsCrossed,
-    disabled: false,
+    disabled: true,
   },
   {
     title: "Holidays",
@@ -78,7 +78,7 @@ const items = [
       { title: "All Bookings", url: "/bookings/all" },
       { title: "Create Booking", url: "/bookings/create" },
     ],
-    disabled: false,
+    disabled: true,
   },
   {
     title: "Leftover",
