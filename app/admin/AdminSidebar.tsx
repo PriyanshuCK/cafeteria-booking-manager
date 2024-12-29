@@ -31,6 +31,7 @@ import {
   UtensilsCrossed,
   ChevronRight,
 } from "lucide-react";
+import Link from "next/link";
 
 const items = [
   {
@@ -150,7 +151,7 @@ export function AdminSidebar() {
                               {item.submenu.map((subitem) => (
                                 <SidebarMenuSubItem key={subitem.title}>
                                   <SidebarMenuButton asChild>
-                                    <a
+                                    <Link
                                       href={`/admin${subitem.url}`}
                                       className={
                                         item.disabled
@@ -159,7 +160,7 @@ export function AdminSidebar() {
                                       }
                                     >
                                       <span>{subitem.title}</span>
-                                    </a>
+                                    </Link>
                                   </SidebarMenuButton>
                                 </SidebarMenuSubItem>
                               ))}

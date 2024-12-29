@@ -5,7 +5,6 @@ import {
 } from "@/components/ui/sidebar";
 import { AdminSidebar } from "./AdminSidebar";
 import { DateRangeProvider } from "./contexts/DateRangeContext";
-import { DateRangeSelector } from "@/components/date-range-selector";
 import { BookingProvider } from "./contexts/BookingsContext";
 import DynamicBreadCrumb from "@/components/dynamic-breadcrumb";
 import { Separator } from "@/components/ui/separator";
@@ -28,10 +27,7 @@ export default function AdminLayout({
             </div>
           </header>
           <DateRangeProvider>
-            <BookingProvider>
-              <DateRangeSelector />
-              {children}
-            </BookingProvider>
+            <BookingProvider>{children}</BookingProvider>
           </DateRangeProvider>
         </SidebarInset>
       </SidebarProvider>
