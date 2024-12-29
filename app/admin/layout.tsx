@@ -9,7 +9,6 @@ import { DateRangeSelector } from "@/components/date-range-selector";
 import { BookingProvider } from "./contexts/BookingsContext";
 import DynamicBreadCrumb from "@/components/dynamic-breadcrumb";
 import { Separator } from "@/components/ui/separator";
-import { BreadcrumbResponsive } from "@/components/breadcrumb-responsive";
 
 export default function AdminLayout({
   children,
@@ -26,8 +25,6 @@ export default function AdminLayout({
               <SidebarTrigger className="-ml-1" />
               <Separator orientation="vertical" className="mr-2 h-4" />
               <DynamicBreadCrumb />
-              {/* <Separator orientation="vertical" className="ml-2 h-4" /> */}
-              {/* <BreadcrumbResponsive /> */}
             </div>
           </header>
           <DateRangeProvider>
