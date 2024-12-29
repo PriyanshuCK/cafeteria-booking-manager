@@ -9,11 +9,13 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSub,
   SidebarMenuSubItem,
+  SidebarRail,
 } from "@/components/ui/sidebar";
 import {
   LayoutDashboard,
@@ -114,10 +116,13 @@ const items = [
 
 export function AdminSidebar() {
   return (
-    <Sidebar>
+    <Sidebar collapsible="icon">
+      <SidebarHeader>
+        <span className="truncate font-semibold">Admin Dashboard</span>
+      </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Admin Dashboard</SidebarGroupLabel>
+          <SidebarGroupLabel>Group Label</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => {
@@ -184,6 +189,7 @@ export function AdminSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+      <SidebarRail />
     </Sidebar>
   );
 }

@@ -18,12 +18,6 @@ export default function DynamicBreadCrumb() {
     <>
       <Breadcrumb>
         <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink asChild>
-              <Link href="/">Home</Link>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          {pathNames.length > 0 && <BreadcrumbSeparator />}
           {pathNames.map((link, index) => {
             const href = `/${pathNames.slice(0, index + 1).join("/")}`;
             const linkName = link[0].toUpperCase() + link.slice(1);
