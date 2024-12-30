@@ -169,7 +169,7 @@ export function AdminSidebar() {
                         </>
                       ) : (
                         <SidebarMenuButton asChild>
-                          <a
+                          <Link
                             href={`/admin${item.url}`}
                             className={
                               item.disabled
@@ -179,7 +179,7 @@ export function AdminSidebar() {
                           >
                             <item.icon />
                             <span>{item.title}</span>
-                          </a>
+                          </Link>
                         </SidebarMenuButton>
                       )}
                     </SidebarMenuItem>

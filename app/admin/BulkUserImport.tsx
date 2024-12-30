@@ -51,11 +51,8 @@ export function BulkUserImport() {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Bulk User Import</CardTitle>
-      </CardHeader>
-      <CardContent>
+    <Card className="max-w-md">
+      <CardContent className="pt-6">
         <form onSubmit={handleSubmit}>
           <Input type="file" onChange={handleFileChange} accept=".csv,.xlsx" />
           {error && <p className="text-red-500 mt-2">{error}</p>}

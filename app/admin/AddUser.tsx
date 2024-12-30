@@ -48,17 +48,15 @@ export function AddUser() {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Add User</CardTitle>
-      </CardHeader>
-      <CardContent>
+    <Card className="w-fit">
+      <CardContent className="pt-6">
         <form onSubmit={handleSubmit}>
-          <div className="space-y-4">
+          <div className="flex flex-wrap flex-row gap-4">
             <Input
               name="name"
               placeholder="Name"
               value={formData.name}
+              className="max-w-sm"
               onChange={handleChange}
               required
             />
@@ -67,6 +65,7 @@ export function AddUser() {
               type="email"
               placeholder="Email"
               value={formData.email}
+              className="max-w-sm"
               onChange={handleChange}
               required
             />
@@ -75,6 +74,7 @@ export function AddUser() {
               type="password"
               placeholder="Password"
               value={formData.password}
+              className="max-w-sm"
               onChange={handleChange}
               required
             />

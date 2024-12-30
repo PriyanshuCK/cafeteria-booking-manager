@@ -11,7 +11,7 @@ import { auth, signOut } from "@/auth";
 
 export default async function Dashboard() {
   const authUser = await auth();
-  const user = await getUser(authUser?.user?.email || "user@nextmail.com");
+  const user = await getUser(authUser?.user?.email || "");
 
   if (!user) {
     return <div>User not found</div>;

@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 import { editMenuItem } from "../lib/actions";
 
 const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
@@ -25,6 +26,11 @@ export function MenuManagement({
   const [editedItems, setEditedItems] = useState<{ [key: string]: WeeklyMenu }>(
     {}
   );
+
+  const parseItems = (items: string) =>
+    items.split(";").map((item) => item.trim());
+
+  const stringifyItems = (items: string[]) => items.join(";");
 
   const handleSaveItem = async (id: string) => {
     const item = editedItems[id];
@@ -42,14 +48,39 @@ export function MenuManagement({
     }
   };
 
-  const handleInputChange = (id: string, field: string, value: string) => {
-    setEditedItems((prev) => ({
-      ...prev,
-      [id]: {
-        ...weeklyMenu.find((item) => item.id === id)!,
-        [field]: value,
-      },
-    }));
+  const handleAddDish = (
+    id: string,
+    field: "veg_items" | "non_veg_items",
+    value: string
+  ) => {
+    const updatedMenu = {
+      ...weeklyMenu.find((item) => item.id === id)!,
+      [field]: stringifyItems([
+        ...parseItems(
+          editedItems[id]?.[field] ??
+            weeklyMenu.find((item) => item.id === id)![field]
+        ),
+        value,
+      ]),
+    };
+    setEditedItems((prev) => ({ ...prev, [id]: updatedMenu }));
+  };
+
+  const handleRemoveDish = (
+    id: string,
+    field: "veg_items" | "non_veg_items",
+    dish: string
+  ) => {
+    const updatedMenu = {
+      ...weeklyMenu.find((item) => item.id === id)!,
+      [field]: stringifyItems(
+        parseItems(
+          editedItems[id]?.[field] ??
+            weeklyMenu.find((item) => item.id === id)![field]
+        ).filter((item) => item !== dish)
+      ),
+    };
+    setEditedItems((prev) => ({ ...prev, [id]: updatedMenu }));
   };
 
   return (
@@ -67,26 +98,85 @@ export function MenuManagement({
           {weeklyMenu.map((item) => (
             <TableRow key={item.id}>
               <TableCell>{DAYS[item.day_of_week]}</TableCell>
+
               <TableCell>
+                <div className="flex flex-wrap gap-2">
+                  {parseItems(
+                    editedItems[item.id]?.veg_items ?? item.veg_items
+                  ).map((dish) =>
+                    dish !== "" ? (
+                      <Badge
+                        key={dish}
+                        className="cursor-pointer"
+                        onClick={() =>
+                          handleRemoveDish(item.id, "veg_items", dish)
+                        }
+                        variant={"outline"}
+                      >
+                        {dish} ⨯
+                      </Badge>
+                    ) : null
+                  )}
+                </div>
                 <Input
-                  value={editedItems[item.id]?.veg_items ?? item.veg_items}
-                  onChange={(e) =>
-                    handleInputChange(item.id, "veg_items", e.target.value)
-                  }
+                  placeholder="Add a veg dish & press Enter"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && e.currentTarget.value.trim()) {
+                      handleAddDish(
+                        item.id,
+                        "veg_items",
+                        e.currentTarget.value.trim()
+                      );
+                      e.currentTarget.value = "";
+                    }
+                  }}
+                  className={"mt-3"}
                 />
               </TableCell>
+
               <TableCell>
-                <Input
-                  value={
+                <div className="flex flex-wrap gap-2">
+                  {parseItems(
                     editedItems[item.id]?.non_veg_items ?? item.non_veg_items
-                  }
-                  onChange={(e) =>
-                    handleInputChange(item.id, "non_veg_items", e.target.value)
-                  }
+                  ).map((dish) =>
+                    dish !== "" ? (
+                      <Badge
+                        key={dish}
+                        className="cursor-pointer"
+                        onClick={() =>
+                          handleRemoveDish(item.id, "non_veg_items", dish)
+                        }
+                        variant={"outline"}
+                      >
+                        {dish} ⨯
+                      </Badge>
+                    ) : null
+                  )}
+                </div>
+                <Input
+                  placeholder="Add a non-veg dish & press Enter"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && e.currentTarget.value.trim()) {
+                      handleAddDish(
+                        item.id,
+                        "non_veg_items",
+                        e.currentTarget.value.trim()
+                      );
+                      e.currentTarget.value = "";
+                    }
+                  }}
+                  className={"mt-3"}
                 />
               </TableCell>
+
+              {/* Save Button */}
               <TableCell>
-                <Button onClick={() => handleSaveItem(item.id)}>Save</Button>
+                <Button
+                  onClick={() => handleSaveItem(item.id)}
+                  disabled={!editedItems[item.id]} // Disable if no changes
+                >
+                  Save
+                </Button>
               </TableCell>
             </TableRow>
           ))}
