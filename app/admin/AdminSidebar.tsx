@@ -1,3 +1,4 @@
+import ThemeColorForm from "@/components/themeColorForm";
 import {
   Collapsible,
   CollapsibleContent,
@@ -186,6 +187,9 @@ export function AdminSidebar() {
                   </Collapsible>
                 );
               })}
+              <SidebarMenuItem>
+                <ThemeColorForm />
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

@@ -1,16 +1,26 @@
 "use client";
 
 import { MealBooking } from "../lib/definitions";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  BarChart,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import {
   Bar,
+  BarChart,
+  CartesianGrid,
+  Line,
+  LineChart,
   XAxis,
   YAxis,
-  // CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
 } from "recharts";
 
 export function PickupTrends({ bookings }: { bookings: MealBooking[] }) {
@@ -30,10 +40,9 @@ export function PickupTrends({ bookings }: { bookings: MealBooking[] }) {
 
   const unclaimedMealsPercentage = pickupTrendsData.map((day) => ({
     date: day.date,
-    unclaimedPercentage: (
-      ((day.booked - day.pickedUp) / day.booked) *
-      100
-    ).toFixed(2),
+    unclaimedPercentage: parseInt(
+      (((day.booked - day.pickedUp) / day.booked) * 100).toFixed(2)
+    ),
   }));
 
   const userPickupRates = bookings.reduce((acc, booking) => {
@@ -56,16 +65,160 @@ export function PickupTrends({ bookings }: { bookings: MealBooking[] }) {
     .sort((a, b) => b.unclaimedRate - a.unclaimedRate)
     .slice(0, 5);
 
+  const chartConfig = {
+    booked: {
+      label: "Booked",
+    },
+    pickedUp: {
+      label: "Picked Up",
+    },
+  };
+
+  const unclaimedChartConfig = {
+    unclaimedPercentage: {
+      label: "Unclaimed %",
+    },
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <Card>
+      <Card className="max-w-2xl">
+        <CardHeader>
+          <CardTitle className="text-lg font-semibold">
+            Meals Booked vs. Picked Up
+          </CardTitle>
+          <CardDescription>
+            Comparison of meals booked and picked up over time
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ChartContainer config={chartConfig}>
+            <BarChart accessibilityLayer data={pickupTrendsData}>
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="date"
+                tickLine={true}
+                tickMargin={10}
+                axisLine={false}
+                tickFormatter={(value) => value.slice(0, 10)}
+              />
+              <ChartTooltip
+                content={
+                  <ChartTooltipContent
+                    className="w-[180px]"
+                    formatter={(value, name, item, index) => (
+                      <>
+                        <div className="flex flex-col gap-2 w-full">
+                          <div className="flex items-center gap-1.5">
+                            <div
+                              className={`h-2.5 w-2.5 shrink-0 rounded-[2px] ${
+                                name === "Booked"
+                                  ? "bg-primary-300"
+                                  : "bg-primary-700"
+                              }`}
+                            />
+                            <span className="grow">{name}:</span>
+                            <div className="ml-auto font-mono text-foreground">
+                              {value}
+                            </div>
+                          </div>
+                          {index === 1 && (
+                            <>
+                              <div className="flex items-center border-t pt-1.5 text-xs font-medium text-foreground justify-between w-full">
+                                Unclaimed Meals
+                                <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
+                                  {item.payload.booked - item.payload.pickedUp}
+                                </div>
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </>
+                    )}
+                  />
+                }
+                cursor={true}
+                defaultIndex={2}
+              />
+              <Bar
+                dataKey="booked"
+                className="fill-primary-300"
+                name="Booked"
+                radius={4}
+              />
+              <Bar
+                dataKey="pickedUp"
+                className="fill-primary-700"
+                name="Picked Up"
+                radius={4}
+              />
+            </BarChart>
+          </ChartContainer>
+        </CardContent>
+      </Card>
+
+      <Card className="max-w-2xl">
+        <CardHeader>
+          <CardTitle>Unclaimed Meals Percentage</CardTitle>
+          <CardDescription>Percentage of Meals Not Picked Up</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ChartContainer config={unclaimedChartConfig}>
+            <BarChart accessibilityLayer data={unclaimedMealsPercentage}>
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="date"
+                tickLine={false}
+                axisLine={false}
+                tickMargin={8}
+                tickFormatter={(value) => value.slice(0, 10)}
+              />
+              <ChartTooltip
+                cursor={false}
+                defaultIndex={2}
+                content={
+                  <ChartTooltipContent
+                    className="w-16"
+                    formatter={(value, name) => {
+                      return (
+                        <>
+                          <div className="flex flex-col gap-2 w-full">
+                            <div className="flex items-center gap-1.5">
+                              <span className="grow">
+                                {unclaimedChartConfig[
+                                  name as keyof typeof unclaimedChartConfig
+                                ]?.label || name}
+                              </span>
+                              <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
+                                {value}
+                              </div>
+                            </div>
+                          </div>
+                        </>
+                      );
+                    }}
+                  />
+                }
+              />
+              <Bar
+                dataKey="unclaimedPercentage"
+                className="fill-primary-500"
+                name="Unclaimed %"
+                radius={4}
+              />
+            </BarChart>
+          </ChartContainer>
+        </CardContent>
+      </Card>
+
+      {/* <Card>
         <CardHeader>
           <CardTitle>Meals Booked vs. Picked Up</CardTitle>
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={pickupTrendsData}>
-              {/* <CartesianGrid strokeDasharray="3 3" /> */}
+              <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="date" />
               <YAxis />
               <Tooltip />
@@ -75,16 +228,16 @@ export function PickupTrends({ bookings }: { bookings: MealBooking[] }) {
             </BarChart>
           </ResponsiveContainer>
         </CardContent>
-      </Card>
+      </Card> */}
 
-      <Card>
+      {/* <Card>
         <CardHeader>
           <CardTitle>Unclaimed Meals Percentage</CardTitle>
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={unclaimedMealsPercentage}>
-              {/* <CartesianGrid strokeDasharray="3 3" /> */}
+              <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="date" />
               <YAxis />
               <Tooltip />
@@ -97,7 +250,7 @@ export function PickupTrends({ bookings }: { bookings: MealBooking[] }) {
             </BarChart>
           </ResponsiveContainer>
         </CardContent>
-      </Card>
+      </Card> */}
 
       <Card>
         <CardHeader>

@@ -7,7 +7,10 @@ export default function PickupTrendsPage() {
   const { bookings } = useContext(BookingContext)!;
   return (
     <>
-      <h1 className="text-3xl font-semibold my-10">Pickup Trends</h1>
+      <h2 className="text-xl font-semibold">Pickup Trends</h2>
+      <p className="text-sm text-gray-500 mb-4">
+        View reports on pickup trends.
+      </p>
       <PickupTrends bookings={bookings} />
     </>
   );

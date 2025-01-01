@@ -1,19 +1,26 @@
 "use client";
 
 import { MealBooking } from "../lib/definitions";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  BarChart,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import {
   Bar,
-  XAxis,
-  YAxis,
-  // CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
+  BarChart,
+  CartesianGrid,
   Cell,
+  Pie,
+  PieChart,
+  XAxis,
 } from "recharts";
 
 export function BookingOverview({ bookings }: { bookings: MealBooking[] }) {
@@ -65,37 +72,221 @@ export function BookingOverview({ bookings }: { bookings: MealBooking[] }) {
     { name: "Non-Vegetarian", value: vegNonVegSplit.nonVeg },
   ];
 
-  const COLORS = ["#22c55e", "#eab308"];
+  const chartConfig = {
+    veg: {
+      label: "Veg",
+    },
+    nonVeg: {
+      label: "NonVeg",
+    },
+  };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <Card>
-        <CardHeader>
-          <CardTitle>Daily Bookings</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={dailyBookingsData}>
-              {/* <CartesianGrid strokeDasharray="1 3" /> */}
-              <XAxis dataKey="date" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="veg" fill="#22c55e" name="Vegetarian" />
-              <Bar dataKey="nonVeg" fill="#eab308" name="Non-Vegetarian" />
-            </BarChart>
-          </ResponsiveContainer>
-        </CardContent>
-      </Card>
+    <>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
+        <Card className="max-w-2xl">
+          <CardHeader>
+            <CardTitle className={"text-lg font-semibold"}>
+              Daily Bookings
+            </CardTitle>
+            <CardDescription>Veg. vs Non-Veg. Bookings by Date</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={chartConfig}>
+              <BarChart accessibilityLayer data={dailyBookingsData}>
+                <CartesianGrid vertical={false} />
+                <XAxis
+                  dataKey="date"
+                  tickLine={true}
+                  tickMargin={10}
+                  axisLine={false}
+                  tickFormatter={(value) => value.slice(0, 10)}
+                />
+                <ChartTooltip
+                  content={
+                    <ChartTooltipContent
+                      className="w-[180px]"
+                      formatter={(value, name, item, index) => {
+                        return (
+                          <>
+                            <div className="flex flex-col gap-2 w-full">
+                              <div className="flex items-center gap-1.5">
+                                <div
+                                  className={`h-2.5 w-2.5 shrink-0 rounded-[2px] ${
+                                    name === "Veg"
+                                      ? "bg-primary-300"
+                                      : "bg-primary-700"
+                                  }`}
+                                />
+                                <span className="grow">
+                                  {chartConfig[name as keyof typeof chartConfig]
+                                    ?.label || name}
+                                </span>
+                                <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
+                                  {value}
+                                </div>
+                              </div>
+                              {index === 1 && (
+                                <>
+                                  <div className="flex items-center border-t pt-1.5 text-xs font-medium text-foreground justify-between w-full">
+                                    Total
+                                    <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
+                                      {item.payload.veg + item.payload.nonVeg}
+                                    </div>
+                                  </div>
+                                </>
+                              )}
+                            </div>
+                          </>
+                        );
+                      }}
+                    />
+                  }
+                  cursor={true}
+                  defaultIndex={2}
+                />
+                <Bar
+                  dataKey="veg"
+                  className="fill-primary-300"
+                  name="Veg"
+                  radius={4}
+                />
+                <Bar
+                  dataKey="nonVeg"
+                  className="fill-primary-700"
+                  name="Non-Veg"
+                  radius={4}
+                />
+              </BarChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
 
-      <Card>
+        <Card className="max-w-2xl">
+          <CardHeader>
+            <CardTitle className={"text-lg font-semibold"}>
+              Weekly Trends
+            </CardTitle>
+            <CardDescription>Bookings by Day of the Week</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={chartConfig}>
+              <BarChart accessibilityLayer data={weeklyTrendsData}>
+                <CartesianGrid vertical={false} />
+                <XAxis
+                  dataKey="day"
+                  tickLine={false}
+                  tickMargin={10}
+                  axisLine={false}
+                  tickFormatter={(value) => value}
+                />
+                <ChartTooltip
+                  content={
+                    <ChartTooltipContent
+                      hideLabel
+                      className="w-16"
+                      formatter={(value, name) => {
+                        return (
+                          <>
+                            <div className="flex flex-col gap-2 w-full">
+                              <div className="flex items-center gap-1.5">
+                                <span className="grow">
+                                  {chartConfig[name as keyof typeof chartConfig]
+                                    ?.label || name}
+                                </span>
+                                <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
+                                  {value}
+                                </div>
+                              </div>
+                            </div>
+                          </>
+                        );
+                      }}
+                    />
+                  }
+                  cursor={true}
+                  defaultIndex={1}
+                />
+                <Bar
+                  dataKey="bookings"
+                  className="fill-primary-500"
+                  name="Bookings"
+                  radius={4}
+                />
+              </BarChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+
+        <Card className="max-w-2xl">
+          <CardHeader>
+            <CardTitle className={"text-lg font-semibold"}>
+              Veg vs. Non-Veg Split
+            </CardTitle>
+            <CardDescription>
+              Total Vegetarian vs. Non-Vegetarian Bookings
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ChartContainer config={chartConfig}>
+              <PieChart accessibilityLayer>
+                <Pie
+                  data={vegNonVegData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  outerRadius={80}
+                  fill="currentColor"
+                  dataKey="value"
+                  label={({ name, percent }) =>
+                    `${name} ${(percent * 100).toFixed(0)}%`
+                  }
+                >
+                  {vegNonVegData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      className={`${
+                        index === 0 ? "fill-primary-300" : "fill-primary-700"
+                      }`}
+                    />
+                  ))}
+                </Pie>
+                <ChartTooltip
+                  content={
+                    <ChartTooltipContent
+                      formatter={(value, name) => (
+                        <div className="flex items-center gap-2">
+                          <div
+                            className={`h-2.5 w-2.5 rounded-[2px] ${
+                              name === "Vegetarian"
+                                ? "bg-primary-300"
+                                : "bg-primary-700"
+                            }`}
+                          />
+                          <span className="font-medium text-foreground">
+                            {name}:
+                          </span>
+                          <span className="ml-auto font-mono text-foreground">
+                            {value}
+                          </span>
+                        </div>
+                      )}
+                    />
+                  }
+                />
+              </PieChart>
+            </ChartContainer>
+          </CardContent>
+        </Card>
+
+        {/* <Card>
         <CardHeader>
           <CardTitle>Weekly Trends</CardTitle>
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={weeklyTrendsData}>
-              {/* <CartesianGrid strokeDasharray="1 3" /> */}
+              <CartesianGrid strokeDasharray="1 3" />
               <XAxis dataKey="day" />
               <YAxis />
               <Tooltip />
@@ -136,7 +327,8 @@ export function BookingOverview({ bookings }: { bookings: MealBooking[] }) {
             </PieChart>
           </ResponsiveContainer>
         </CardContent>
-      </Card>
-    </div>
+      </Card> */}
+      </div>
+    </>
   );
 }

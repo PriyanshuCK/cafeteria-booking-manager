@@ -7,7 +7,10 @@ export default function BookingOverviewPage() {
   const { bookings } = useContext(BookingContext)!;
   return (
     <>
-      <h1 className="text-2xl font-semibold my-10">Booking Overview</h1>
+      <h2 className="text-xl font-semibold">Booking Overview</h2>
+      <p className="text-sm text-gray-500 mb-4">
+        View reports on bookings trends.
+      </p>
       <BookingOverview bookings={bookings} />
     </>
   );
