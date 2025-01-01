@@ -13,6 +13,14 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 export function PickupTrends({ bookings }: { bookings: MealBooking[] }) {
@@ -73,7 +81,7 @@ export function PickupTrends({ bookings }: { bookings: MealBooking[] }) {
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
       <Card className="max-w-2xl">
         <CardHeader>
           <CardTitle className="text-lg font-semibold">
@@ -151,7 +159,9 @@ export function PickupTrends({ bookings }: { bookings: MealBooking[] }) {
 
       <Card className="max-w-2xl">
         <CardHeader>
-          <CardTitle>Unclaimed Meals Percentage</CardTitle>
+          <CardTitle className="text-lg font-semibold">
+            Unclaimed Meals Percentage
+          </CardTitle>
           <CardDescription>Percentage of Meals Not Picked Up</CardDescription>
         </CardHeader>
         <CardContent>
@@ -202,6 +212,36 @@ export function PickupTrends({ bookings }: { bookings: MealBooking[] }) {
           </ChartContainer>
         </CardContent>
       </Card>
+      <Card className="max-w-2xl">
+        <CardHeader>
+          <CardTitle className="text-lg font-semibold">
+            Users with High Unclaimed Rates
+          </CardTitle>
+          <CardDescription>
+            List of Top 5 Users with the highest unclaimed rates
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[150px]">User ID</TableHead>
+                <TableHead className="text-right">Unclaimed Rate (%)</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {usersWithHighUnclaimedRates.map((user) => (
+                <TableRow key={user.userId}>
+                  <TableCell className="font-medium">{user.userId}</TableCell>
+                  <TableCell className="text-right">
+                    {(user.unclaimedRate * 100).toFixed(2)}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
 
       {/* <Card>
         <CardHeader>
@@ -244,7 +284,7 @@ export function PickupTrends({ bookings }: { bookings: MealBooking[] }) {
         </CardContent>
       </Card> */}
 
-      <Card>
+      {/* <Card>
         <CardHeader>
           <CardTitle>Users with High Unclaimed Rates</CardTitle>
         </CardHeader>
@@ -258,7 +298,7 @@ export function PickupTrends({ bookings }: { bookings: MealBooking[] }) {
             ))}
           </ul>
         </CardContent>
-      </Card>
+      </Card> */}
     </div>
   );
 }
