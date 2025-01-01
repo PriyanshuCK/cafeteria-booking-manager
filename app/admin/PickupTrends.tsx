@@ -13,15 +13,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Line,
-  LineChart,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 export function PickupTrends({ bookings }: { bookings: MealBooking[] }) {
   const pickupTrends = bookings.reduce((acc, booking) => {
