@@ -1,4 +1,4 @@
-import ThemeColorForm from "@/components/themeColorForm";
+// import ThemeColorForm from "@/components/themeColorForm";
 import {
   Collapsible,
   CollapsibleContent,
@@ -82,7 +82,7 @@ const items = [
       { title: "All Bookings", url: "/bookings/all" },
       { title: "Create Booking", url: "/bookings/create" },
     ],
-    disabled: false,
+    disabled: true,
   },
   {
     title: "Leftover",
@@ -187,9 +187,9 @@ export function AdminSidebar() {
                   </Collapsible>
                 );
               })}
-              <SidebarMenuItem>
+              {/* <SidebarMenuItem>
                 <ThemeColorForm />
-              </SidebarMenuItem>
+              </SidebarMenuItem> */}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

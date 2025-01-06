@@ -1,6 +1,5 @@
 "use client";
 
-import { addDays } from "date-fns";
 import React, { createContext, useState, ReactNode } from "react";
 import { DateRange } from "react-day-picker";
 
@@ -10,8 +9,8 @@ interface DateRangeContextType {
 }
 
 const defaultDateRange: DateRange = {
-  from: new Date(),
-  to: addDays(new Date(), 7),
+  from: new Date("2024-11-01"),
+  to: new Date(),
 };
 
 export const DateRangeContext = createContext<DateRangeContextType | undefined>(
