@@ -24,16 +24,18 @@ export const authConfig = {
           return Response.redirect(new URL("/dashboard", nextUrl));
         }
         return false;
-      } else if (isLoggedIn && isOnRoot) {
-        if (auth?.user?.email) {
+      } else if (isOnRoot) {
+        if (isLoggedIn && auth?.user?.email) {
           const user = await getUser(auth?.user?.email);
           if (user?.is_admin) {
             return Response.redirect(new URL("/admin", nextUrl));
           }
-        } else {
           return Response.redirect(new URL("/dashboard", nextUrl));
         }
+        return true;
       }
+
+      return true;
     },
   },
   providers: [],

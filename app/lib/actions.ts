@@ -5,7 +5,7 @@ import { sql } from "@vercel/postgres";
 import { AuthError } from "next-auth";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { csvToJson } from "@/lib/utils";
 import {
@@ -110,13 +110,23 @@ export async function authenticate(
 ) {
   try {
     await signIn("credentials", formData);
+
+    const email = formData.get("email") as string;
+    const { getUser } = await import("./data");
+    const user = await getUser(email);
+
+    if (user?.is_admin) {
+      redirect("/admin");
+    } else {
+      redirect("/dashboard");
+    }
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
-          return "Invalid credentials.";
+          return "Invalid email or password.";
         default:
-          return "Something went wrong.";
+          return "Something went wrong. Please try again.";
       }
     }
     throw error;
