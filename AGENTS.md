@@ -3,10 +3,10 @@
 ## Development Commands
 
 ### Core Commands
-- `npm run dev` - Start development server with turbopack
-- `npm run build` - Build production bundle
-- `npm run start` - Start production server
-- `npm run lint` - Run ESLint to check code quality
+- `pnpm dev` - Start development server with turbopack
+- `pnpm build` - Build production bundle
+- `pnpm start` - Start production server
+- `pnpm lint` - Run ESLint to check code quality
 
 ### Note on Testing
 This project does not currently have a test suite configured. When adding tests, first check package.json for test scripts or ask the user for the correct command.
@@ -88,7 +88,7 @@ This project does not currently have a test suite configured. When adding tests,
 - `/hooks` - Custom React hooks
 
 ### Code Quality
-- Run `npm run lint` before committing changes
+- Run `pnpm lint` before committing changes
 - ESLint extends next/core-web-vitals and next/typescript
 - TypeScript strict mode is enabled
 - Keep functions focused and single-purpose
